@@ -1,0 +1,307 @@
+<!doctype html>
+<!--
+    WELCOME TO THE STRIVE TEAM GENERATOR!
+    The app is pretty straight forward:
+    - The user can add a list of names
+    - The user can set the number of teams
+    - Every time the user clicks on the "assign" button, a random name is placed in a team and removed from the list
+    - Each team should be inside a "column"
+    - [EXTRA] Create a button to remove an user from a team, putting him back in the main list
+    - [EXTRA] Create a button to reset the state of the app
+-->
+<html lang="en">
+  <head>
+    <title>STRIVE TEAM GENERATOR</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+  <style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: ‘Lucida Sans Unicode’, ‘Lucida Grande’, sans-serif;
+    font-size: 10px;
+    background-color: #333;
+}
+
+#header {
+    margin: 0 auto;
+    padding: 10px 20px;
+    width: 498px;
+    font-size: 42pt;
+    font-weight: bold;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    text-align: center;
+    color: #FFF;
+    background-color: #666;
+    border: 1px solid #000;
+}
+
+#main {
+    margin: 0 auto;
+    width: 560px;
+}
+
+#left {
+    margin: 10px;
+    float: left;
+}
+
+#right {
+    margin: 10px;
+    margin-left: -5px;
+    float: right;
+}
+
+.pl {
+    margin: 0;
+    padding: 5px 7px 5px 10px;
+    width: 300px;
+    background-color: #666;
+    border: 1px solid #000;
+}
+
+.pli {
+    margin: 5px 0;
+    padding: 3px 10px;
+    height: 22px;
+    color: #999;
+    font-size: 13pt;
+    background-color: #333;
+    border: 1px solid #000;
+}
+
+#instructions {
+    margin-bottom: 5px;
+    padding: 0px;
+    padding-left: 2px;
+    width: 204px;
+    height: 200px;
+}
+
+#ap, #dp, #gt, #apt, #mailto {
+    margin: 5px;
+    padding: 5px;
+    color: #FFF;
+    text-decoration: none;
+    background-color: #666;
+    border: 1px solid #000;
+}
+
+#gt {
+    margin-top: 2px;
+    margin-left: 0px;
+    width: 208px;
+}
+
+#mailto {
+    margin-top: 2px;
+    margin-left: 0px;
+    padding-left: 0;
+    padding-right: 0;
+    display: block;
+    width: 206px;
+    text-align: center;
+}
+
+.ta {
+    width: 189px;
+    height: 45px;
+    background-color: #FFF;
+}
+
+#dp {
+    margin: -1px -8px 0 0;
+    float: right;
+    font-size: 10px;
+}
+
+#apt {
+    margin: 0;
+    color: #333;
+    background-color: #FFF;
+}
+
+.red{color:#FFF;background-color:#F00}
+
+.blue{color:#FFF;background-color:#00F}</style>
+  <body>
+
+   <div class="container md pt-5">
+    <div id="header">Team Generator</div>
+    <div id="main">
+        <div id="left">
+           
+            <textarea id="pl" class="pl ta" readonly></textarea><br>
+            <input type="text" id="apt" maxlength="24" />
+            <input type="button" id="ap" onClick="addPlayer()" value="Add Player" /><br>
+            <input type="button" id="gt" onClick="clrPlayers()" value="Clear Players" /><br>
+            <input type="button" id="gt" onClick="genTeams()" value="Generate Teams" />
+            <div id="mail"></div>
+        </div>
+        
+        <div id="right">
+            <div id="red" class="pl"></div>
+            <div id="blue" class="pl"></div>
+        </div>
+    </div>
+    
+   </div>
+
+
+<script>
+
+  players = ["Player1", "Player2"];
+  colors = ["Red", "Blue"];
+  
+  document.querySelector('#apt').onkeydown = function(e) {
+      if (e.keyCode === 13) {
+          addPlayer();
+      }
+  };
+  
+  addPlayer = function() {
+      playerName = document.querySelector('#apt').value;
+      if (playerName !== "") {
+          if (players.indexOf(playerName) == -1) {
+              players.push(playerName);
+          }
+      }
+      document.querySelector('#apt').value = "";
+      document.querySelector('#apt').focus();
+      genPL();
+  };
+  
+  delPlayer = function(playerName) {
+      index = players.indexOf(playerName);
+      players.splice(index, 1);
+      colors.splice(index, 1);
+      genPL();
+  };
+  
+  clrPlayers = function() {
+      players = [];
+      colors = [];
+      genPL();
+  };
+  
+  emailTeams = function() {
+      function teams() {
+          redTeam = "";
+          blueTeam = "";
+  
+          for (i = 0; i < players.length; i++) {
+              if (colors[i] === "red") {
+                  redTeam += players[i] + ", ";
+              } else if (colors[i] === "blue") {
+                  blueTeam += players[i] + ", ";
+              }
+          }
+  
+          redTeam += ",";
+          blueTeam += ",";
+  
+          redTeam = redTeam.split(", ,")[0];
+          blueTeam = blueTeam.split(", ,")[0];
+  
+          return "Red Team: " + redTeam + "<br> Blue Team: " + blueTeam;
+      }
+  
+      if (players.length > 1) {
+          if (colors.length = players.length) {
+              document.querySelector("#mail").innerHTML = '<a id="mailto" href="mailto:?Subject=Team%20Generator&Body=' + teams() + '">Email Teams</a>';
+          } else {
+              document.querySelector("#mail").innerHTML = '<a id="mailto">No Teams to Email</a>';
+          }
+      } else {
+          document.querySelector("#mail").innerHTML = '<a id="mailto">No Teams to Email</a>';
+      }
+  };
+  
+  genPL = function() {
+      document.querySelector("#pl").innerHTML = " ";
+      document.querySelector("#red").innerHTML = " ";
+      document.querySelector("#blue").innerHTML = " ";
+      if (players.length > 0) {
+          pl = "Player List: ";
+          for (i = 0; i < players.length; i++) {
+              ne = document.createElement("div");
+              ne.id = players[i];
+              ne.className = "pli " + colors[i];
+              ne.innerHTML = players[i] + '<input type="button" id="dp" onClick="delPlayer(' + "'" + players[i] + "'" + ')" value="Delete" />';
+              if (colors[i] === "red" || colors[i] === "blue") {
+                  document.querySelector("#" + colors[i]).appendChild(ne);
+              }
+              pl += players[i] + ", ";
+          }
+      }
+      if (colors.length < 1) {
+          ne = document.createElement("div");
+          ne.className = "pli";
+          if (players.length > 0) {
+              ne.innerHTML = 'No teams yet!';
+          } else {
+              ne.innerHTML = 'No players yet!';
+          }
+          document.querySelector("#red").appendChild(ne);
+  
+          ne = document.createElement("div");
+          ne.className = "pli";
+          if (players.length > 0) {
+              ne.innerHTML = 'Click "Generate Teams"!';
+          } else {
+              ne.innerHTML = 'Add Some Players!';
+          }
+          document.querySelector("#blue").appendChild(ne);
+      }
+      if (players.length > 0) {
+          pl += ",";
+      } else {
+          pl = "No players in the player list!\nType a name in the text box below and hit enter to add some!";
+      }
+      document.querySelector("#pl").innerHTML = pl.split(", ,")[0];
+      emailTeams();
+  };
+  
+  genPL();
+  
+  genTeams = function() {
+      colors = [];
+  
+      function colorGen() {
+          rand = Math.floor(Math.random() * 2);
+  
+          if (rand > 0 && red > 0) {
+              red--;
+              return "red";
+          } else if (blue > 0) {
+              blue--;
+              return "blue";
+          } else {
+              return "red";
+          }
+      }
+  
+      red = Math.round(players.length / 2);
+      blue = red;
+  
+      for (i = 0; i < players.length; i++) {
+          colors.push(colorGen());
+      }
+  
+      genPL();
+  };
+  
+  genTeams();
+  
+  document.title = "Team Generator";</script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+  </body>
+</html>
